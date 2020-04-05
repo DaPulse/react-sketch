@@ -139,6 +139,7 @@ class SketchField extends PureComponent {
         'top': opts.top
       });
       canvas.add(oImg);
+      canvas.setActiveObject(oImg);
     });
   };
 
