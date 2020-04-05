@@ -582,6 +582,9 @@ class SketchField extends PureComponent {
     });
 
     canvas.add(iText);
+    canvas.setActiveObject(iText);
+    iText.enterEditing();
+    iText.selectAll()
   };
 
   componentDidMount = () => {
@@ -708,7 +711,10 @@ class SketchField extends PureComponent {
     }
 
     canvas.add(shape);
+    canvas.setActiveObject(shape);
+
   }
+
 
   _capsFirstLetter = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
