@@ -571,21 +571,25 @@ class SketchField extends PureComponent {
   addText = (text, options = {}) => {
     let canvas = this._fc;
     let iText = new fabric.IText(text, options);
-    let opts = {
-      left: (canvas.getWidth() - iText.width) * 0.5,
-      top: (canvas.getHeight() - iText.height) * 0.5,
+    canvas.on('mouse:down', function(e){
+      let opts = {
+        left: canvas.getPointer().x ,
+        top: canvas.getPointer().y ,
     };
-    Object.assign(options, opts);
-    iText.set({
-      'left': options.left,
-      'top': options.top,
-      id: options.id
-    });
+      Object.assign(options, opts);
+      iText.set({
+        'left': options.left,
+        'top': options.top,
+        id: options.id
+      });
 
-    canvas.add(iText);
-    canvas.setActiveObject(iText);
     iText.enterEditing();
     iText.selectAll()
+      canvas.add(iText);
+      canvas.setActiveObject(text);
+});
+    
+
   };
 
   componentDidMount = () => {
@@ -713,7 +717,6 @@ class SketchField extends PureComponent {
 
     canvas.add(shape);
     canvas.setActiveObject(shape);
-
   }
 
 
