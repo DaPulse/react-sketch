@@ -664,7 +664,7 @@ class SketchField extends PureComponent {
 
     if (this.props.tool !== prevProps.tool) {
       this._selectedTool =
-        this._tools[this.props.tool] || this._tools[Tool.Pencil];
+        this._tools[this.props.tool] || this._tools[Tool.Select];
     }
 
     //Bring the cursor back to default if it is changed by a tool
@@ -737,9 +737,11 @@ class SketchField extends PureComponent {
     var objToModify = canvas.getObjects().find(o => {
       return objData.id == o.id;
     });
-    objToModify.set(objData); // update the object
-    objToModify.setCoords(); // useful if the object's coordinates in the canvas also changed (usually by moving)
-    canvas.requestRenderAll(); // refresh the canvas so changes will appear
+    if (objToModify) {
+      objToModify.set(objData); // update the object
+      objToModify.setCoords(); // useful if the object's coordinates in the canvas also changed (usually by moving)
+      canvas.requestRenderAll(); // refresh the canvas so changes will appear
+    }
   };
 
   render = () => {
