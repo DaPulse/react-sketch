@@ -127,10 +127,11 @@ class SketchField extends PureComponent {
     let canvas = this._fc;
     fabric.Image.fromURL(dataUrl, oImg => {
       let opts = {
-        left: Math.random() * (canvas.getWidth() - oImg.width * 0.5),
-        top: Math.random() * (canvas.getHeight() - oImg.height * 0.5),
+        left: document.querySelector(".sketch").scrollLeft + Math.random() * (400) + 100,
+        top: document.querySelector(".sketch").scrollTop + Math.random() * (400) + 100,
         scale: 0.5
       };
+
       Object.assign(opts, options);
       oImg.scale(opts.scale);
       oImg.set({
