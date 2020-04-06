@@ -124,23 +124,21 @@ class SketchField extends PureComponent {
    * }
    */
   addImg = (dataUrl, options = {}) => {
-    let canvas = this._fc;
-    fabric.Image.fromURL(dataUrl, oImg => {
-      let opts = {
-        left: document.querySelector(".sketch").scrollLeft + Math.random() * (400) + 100,
-        top: document.querySelector(".sketch").scrollTop + Math.random() * (400) + 100,
-        scale: 0.5
-      };
+      let pugImg = new Image();
+      pugImg.onload = function (img) {
+          let canvas = this._fc;
+          let oImg = new fabric.Image(pugImg, {
+              left: document.querySelector(".sketch").scrollLeft + Math.random() * (400) + 100,
+              top: document.querySelector(".sketch").scrollTop + Math.random() * (400) + 100,
+              id: options.id,
+              scaleX: .4,
+              scaleY: .4
+          });
 
-      Object.assign(opts, options);
-      oImg.scale(opts.scale);
-      oImg.set({
-        left: opts.left,
-        top: opts.top
-      });
-      canvas.add(oImg);
-      canvas.setActiveObject(oImg);
-    });
+          canvas.add(oImg);
+          canvas.setActiveObject(oImg);
+      }.bind(this);
+      pugImg.src = dataUrl;
   };
 
   /**
