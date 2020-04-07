@@ -134,9 +134,9 @@ class SketchField extends PureComponent {
               scaleX: .4,
               scaleY: .4
           });
-
           canvas.add(oImg);
-          canvas.setActiveObject(oImg);
+         canvas.setActiveObject(oImg);
+
       }.bind(this);
       pugImg.src = dataUrl;
   };
@@ -616,7 +616,9 @@ class SketchField extends PureComponent {
     this._backgroundColor(backgroundColor);
 
     let selectedTool = this._tools[tool];
+    console.log('tool',tool)
     selectedTool.configureCanvas(this.props);
+    console.log('selectedTool',selectedTool)
     this._selectedTool = selectedTool;
 
     // Control resize
@@ -714,16 +716,29 @@ class SketchField extends PureComponent {
       shape = new fabric.Path(string_path);
       delete shapeData.path;
       shape.set(shapeData);
+      canvas.add(shape);
     } else if (type == "I-text") {
       shape = new fabric.Text(shapeData.text);
       delete shapeData.text;
       shape.set(shapeData);
-    } else {
-      // for Rectangle and Circle objects
+      canvas.add(shape);
+    } else if (type == "Image") {
+      let pugImg = new Image();
+      pugImg.onload = function (img) {
+        let oImg = new fabric.Image(pugImg, {
+          left: document.querySelector(".sketch").scrollLeft + Math.random() * (400) + 100,
+          top: document.querySelector(".sketch").scrollTop + Math.random() * (400) + 100,
+          scaleX: .4,
+          scaleY: .4
+        });
+        oImg.set(shapeData);
+        canvas.add(oImg);
+      };
+      pugImg.src = shapeData.src;
+     } else {
       shape = new fabric[type](shapeData);
+      canvas.add(shape);
     }
-
-    canvas.add(shape);
   };
 
   _capsFirstLetter = str => {
@@ -769,3 +784,4 @@ class SketchField extends PureComponent {
 }
 
 export default SketchField;
+
