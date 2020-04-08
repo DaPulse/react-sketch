@@ -159,7 +159,7 @@ class SketchField extends PureComponent {
         this._history.keep([obj, state, state]);
 
         // ADDED
-        if (!obj.sender) {
+        if (!obj.dontUpdateOthers) {
             const id = this.props.shortid.generate();
             Object.assign(obj, {id});
             this.props.onUpdate(
@@ -169,6 +169,10 @@ class SketchField extends PureComponent {
                 id,
                 obj.isFromInit
             );
+        } else {
+            delete obj.dontUpdateOthers;
+            let strObj = JSON.stringify(obj);
+            this.props.onUpdate(strObj, "update", this.props.username, obj.id);
         }
     };
 
@@ -201,9 +205,14 @@ class SketchField extends PureComponent {
         this._history.keep([obj, prevState, currState]);
 
         // ADDED
-        if (!obj.sender) {
+        if (!obj.dontUpdateOthers) {
             let strObj = JSON.stringify(obj);
             this.props.onUpdate(strObj, "update", this.props.username, obj.id);
+        } else {
+            delete obj.dontUpdateOthers
+            let strObj = JSON.stringify(obj);
+            this.props.onUpdate(strObj, "update", this.props.username, obj.id);
+
         }
     };
 
@@ -724,11 +733,13 @@ class SketchField extends PureComponent {
             shape = new fabric.Path(string_path);
             delete shapeData.path;
             shape.set(shapeData);
+            shape.set({dontUpdateOthers: true});
             canvas.add(shape);
         } else if (type == "I-text") {
             shape = new fabric.Text(shapeData.text);
             delete shapeData.text;
             shape.set(shapeData);
+            shape.set({dontUpdateOthers: true});
             canvas.add(shape);
         } else if (type == "Image") {
             let pugImg = new Image();
@@ -740,11 +751,13 @@ class SketchField extends PureComponent {
                     scaleY: .4
                 });
                 oImg.set(shapeData);
+                oImg.set({dontUpdateOthers: true})
                 canvas.add(oImg);
             };
             pugImg.src = shapeData.src;
         } else {
             shape = new fabric[type](shapeData);
+            shape.set({dontUpdateOthers: true})
             canvas.add(shape);
         }
     };
