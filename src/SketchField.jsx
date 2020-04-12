@@ -777,17 +777,18 @@ class SketchField extends PureComponent {
     };
 
     modifyObject = obj => {
-        let objData = JSON.parse(obj);
         let canvas = this._fc;
         let objects = obj.objects || [obj];
         console.log("objects", objects);
         console.log("objects from canvas", canvas.getObjects());
         objects.forEach(obj => {
+            let objData = JSON.parse(obj);
             const objToModify = canvas.getObjects().find(o => {
-                return obj.id == o.id;
+                return objData.id == o.id;
             });
+            console.log("will modify", objToModify);
             if (objToModify) {
-                objToModify.set(obj); // update the object
+                objToModify.set(objData); // update the object
                 objToModify.setCoords(); // useful if the object's coordinates in the canvas also changed (usually by moving)
                 canvas.requestRenderAll(); // refresh the canvas so changes will appear
             }
