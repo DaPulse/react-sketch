@@ -589,7 +589,6 @@ class SketchField extends PureComponent {
 
         canvas.on("mouse:down", function (e) {
             if (isDown) {
-                console.log("mousedoun text");
                 let opts = {
                     left: canvas.getPointer().x,
                     top: canvas.getPointer().y
@@ -779,14 +778,11 @@ class SketchField extends PureComponent {
     modifyObject = obj => {
         let canvas = this._fc;
         let objects = obj.objects || [obj];
-        console.log("objects", objects);
-        console.log("objects from canvas", canvas.getObjects());
         objects.forEach(obj => {
             let objData = JSON.parse(obj);
             const objToModify = canvas.getObjects().find(o => {
                 return objData.id == o.id;
             });
-            console.log("will modify", objToModify);
             if (objToModify) {
                 objToModify.set(objData); // update the object
                 objToModify.setCoords(); // useful if the object's coordinates in the canvas also changed (usually by moving)
