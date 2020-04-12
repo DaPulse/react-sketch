@@ -722,6 +722,16 @@ class SketchField extends PureComponent {
         let canvas = this._fc;
         let shapeData = JSON.parse(obj);
 
+        if (shapeData.objects) {
+            shapeData.objects.forEach(shapeDataObj =>{
+                this.addOneObject(shapeDataObj, canvas);
+            })
+        } else{
+            this.addOneObject(shapeData, canvas);
+        }
+    };
+
+    addOneObject(shapeData, canvas) {
         let shape = null;
         const type = this._capsFirstLetter(shapeData.type);
         if (type == "Path") {
@@ -760,7 +770,7 @@ class SketchField extends PureComponent {
             shape.set({dontUpdateOthers: true})
             canvas.add(shape);
         }
-    };
+    }
 
     _capsFirstLetter = str => {
         return str.charAt(0).toUpperCase() + str.slice(1);
@@ -769,15 +779,20 @@ class SketchField extends PureComponent {
     modifyObject = obj => {
         let objData = JSON.parse(obj);
         let canvas = this._fc;
-
-        var objToModify = canvas.getObjects().find(o => {
-            return objData.id == o.id;
+        let objects = obj.objects || [obj];
+        console.log("objects", objects);
+        console.log("objects from canvas", canvas.getObjects());
+        objects.forEach(obj => {
+            const objToModify = canvas.getObjects().find(o => {
+                return obj.id == o.id;
+            });
+            if (objToModify) {
+                objToModify.set(obj); // update the object
+                objToModify.setCoords(); // useful if the object's coordinates in the canvas also changed (usually by moving)
+                canvas.requestRenderAll(); // refresh the canvas so changes will appear
+            }
         });
-        if (objToModify) {
-            objToModify.set(objData); // update the object
-            objToModify.setCoords(); // useful if the object's coordinates in the canvas also changed (usually by moving)
-            canvas.requestRenderAll(); // refresh the canvas so changes will appear
-        }
+
     };
 
     render = () => {
